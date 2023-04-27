@@ -20,7 +20,7 @@ const galleryMarkup = galleryItems
 
 galleryList.insertAdjacentHTML('afterbegin', galleryMarkup); // розмітка поміщена всередині  ul class="gallery"
 
-var lightbox = new SimpleLightbox('.gallery a', {
+new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
 }); //підключення бібліотеки + додала відображення підписів до зображень з атрибута alt

@@ -37,16 +37,25 @@ galleryList.addEventListener('click', openModal); //прослуховувач �
 function openModal(event) {
   event.preventDefault();
   if (event.target === event.currentTarget) return;
-  const instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
     <img class = "gallery_image" src="${event.target.dataset.source}"/>
-`);
+`,
+    {
+      onShow: instance => {
+        document.addEventListener('keydown', closeModalEsc);
+      },
+      onClose: instance => {
+        document.removeEventListener('keydown', closeModalEsc);
+      },
+    },
+  );
 
   instance.show();
 
-  document.addEventListener('keydown', closeModalEsc);
   function closeModalEsc(event) {
+    console.log(event.code);
     if (event.code !== 'Escape') return;
     instance.close();
-    document.removeEventListener('keydown');
   }
 }
