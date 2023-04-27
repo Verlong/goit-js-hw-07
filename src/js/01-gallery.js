@@ -14,20 +14,39 @@ console.log(galleryItems);
 // Заміна значення атрибута src елемента < img > в модальному вікні перед відкриттям.Використовуй готову розмітку
 // модального вікна із зображенням з прикладів бібліотеки basicLightbox.
 
-const galleryList = document.querySelector('.gallery');
-const galleryLiItem = galleryItems
+const galleryList = document.querySelector('.gallery'); // встановлена змінна <ul class="gallery"></ul>
+const galleryMarkup = galleryItems
   .map(({ preview, original, description }) => {
-    return `<li><img src=${preview} data-src=${original} alt=${description} class="gallery-img" width="360" /></li>`;
+    return `<li class="gallery__item">
+  <a class="gallery__link" href="large-image.jpg">
+    <img
+      class="gallery__image"
+      src=${preview}
+      data-source=${original}
+      alt=${description}
+    />
+  </a>
+</li>`;
   })
-  .join('');
-galleryList.insertAdjacentHTML('afterbegin', galleryLiItem);
+  .join(''); // створена змінна розмітки всередині ul class="gallery"
 
-// galleryList.addEventListener('click', e => {
-//   if (e.target.nodeName === 'IMG') {
-//     console.log(e.target);
-//   }
-// });
+galleryList.insertAdjacentHTML('afterbegin', galleryMarkup); // розмітка поміщена всередині  ul class="gallery"
 
-// galleryLiItem.forEach(img => { img.addEventListener('click', openModal); });
+galleryList.addEventListener('click', openModal); //прослуховувач на кліку по картинці
 
-// function openModal()
+function openModal(event) {
+  event.preventDefault();
+  if (event.target === event.currentTarget) return;
+  const instance = basicLightbox.create(`
+    <img class = "gallery_image" src="${event.target.dataset.source}"/>
+`);
+
+  instance.show();
+
+  document.addEventListener('keydown', closeModalEsc);
+  function closeModalEsc(event) {
+    if (event.code !== 'Escape') return;
+    instance.close();
+    document.removeEventListener('keydown');
+  }
+}
